@@ -41,7 +41,7 @@ class Block(object):
             while not self.is_proof_ready():
                 self.header.set_nonce(number)
                 number+=1
-            print('nonce: {}, hash:{}'.format(self.header.nonce,self.header.get_hash()))
+            print('nonce: {}, hash:{}\n'.format(self.header.nonce,self.header.get_hash()))
 
     def set_zeros(self,number):
         self.N_STARTING_ZEROS=number

@@ -30,7 +30,7 @@ class Blockchain(object):
         # Check if the transactions of a block are legal given the current state
         # of the chain and the wallet
         # Returns a boolean
-        wallets = self.wallets
+        wallets = self.wallets.copy()
         for trans in block.transactions:
             if trans.sender not in wallets:
                 return False
@@ -38,7 +38,6 @@ class Blockchain(object):
                 wallets[trans.receiver]=0
             wallets[trans.sender]-=trans.amount
             wallets[trans.receiver]+=trans.amount
-            for key in wallets:
-                if wallets[key]<0:
-                 return False
+            if wallets[trans.sender]<0:
+                return False
         return True

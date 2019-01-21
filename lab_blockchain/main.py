@@ -7,6 +7,7 @@ path = '/root/D&K2/new data on web/lab5/lab_blockchain'
 
 def nb_transactions():
 	files = os.listdir(path+'/blocks')
+	files.sort()
 	for name in files:
 		with open(path+'/blocks/'+name, 'r') as  content:
 			block  = read_block_json(content.read())
@@ -14,6 +15,7 @@ def nb_transactions():
 
 def blocks_to_prove():
     files = os.listdir(path+'/blocks_to_prove')
+    files.sort()
     for name in files:
         with open(path+'/blocks_to_prove/'+name, "r") as content:
 	        print(name+':')
@@ -28,6 +30,7 @@ def change_nb_zeors(filename,nb):
 
 def compute_wallet():
 	files = os.listdir(path+'/blockchain_wallets')
+	files.sort()
 	for name in files:
 		with open(path+'/blockchain_wallets/'+name, "r") as content:
 			print('Wallets of {}:'.format(name))
@@ -39,6 +42,7 @@ def compute_wallet():
 
 def incorrect_block():
 	files = os.listdir(path+'/blockchain_incorrect/')
+	files.sort()
 	for name in files:
 		with open(path+'/blockchain_incorrect/'+name,'r') as content:
 			chains = read_chain(content.read())
@@ -59,7 +63,7 @@ def incorrect_block():
 				print('{} is correct!'.format(name))
 
 def check_transactions(chain, block, name):
-        wallets = chain.wallets
+        wallets = chain.wallets.copy()
         for trans in block.transactions:
             if trans.sender not in wallets:
                 print('{} is incorrect: block index is {}, transaction index is {}'.format(name, block.header.index, trans.index))
@@ -67,11 +71,10 @@ def check_transactions(chain, block, name):
             if trans.receiver not in wallets:
                 wallets[trans.receiver]=0
             wallets[trans.sender]-=trans.amount
-            wallets[trans.receiver]+=trans.amount
-            for key in wallets:
-                if wallets[key]<0:
-                    print('{} is incorrect: block index is {}, transaction index is {}'.format(name, block.header.index, trans.index))
-                    return False
+            wallets[trans.receiver]+=trans.amount    
+            if wallets[trans.sender]<0:
+                print('{} is incorrect: block index is {}, transaction index is {}'.format(name, block.header.index, trans.index))
+                return False
         return True
 
 if __name__ == '__main__':
@@ -91,8 +94,8 @@ if __name__ == '__main__':
 	# 	change_nb_zeors(filename ,i)
 	# 	print('number of starting zeros:'+str(i)+', '+'execute_time: '+str(time.time()-start_time)+'s\n')
 
-	#Ex.23(Delect transaction condition in add_block function) and Ex.24
-	# compute_wallet()
+	#Ex.23(Delect transaction condition in add_block function) and Ex.24(With transaction condition in add_block function)
+	compute_wallet()
 
 	# Ex.25
 	# incorrect_block()
